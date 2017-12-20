@@ -1,8 +1,8 @@
 let table = require('./index.js');
 
-
-let retrieveContentByGenre = (genreType, callback) => {
-	table.Genre
+// Return content by genre
+let retrieveContentByGenre = (genreType) => {
+	return table.Genre
 	  .forge()
 	  .where('name', 'LIKE', '%' + genreType + '%')
 	  .query()
@@ -10,31 +10,23 @@ let retrieveContentByGenre = (genreType, callback) => {
 	  .then((model) => {
 	  	if (model.length > 0) {
 		  	let genre_id = model[0].id;
-		  	table.Content
+		  	return table.Content
 		  	  .forge()
 		  	  .where('genre_id', '=', genre_id)
 		  	  .query()
 		  	  .select()
-		  	  .limit(40)
-		  	  .then((model) => {
-		  	  	callback(model);
-		  	  })
+		  	  .limit(10)
 	  	} else {
-	  		callback([]);
+	  		return [];
 	  	}
 	  })
 }
 
-let getKeywordContent = (name, callback) => {
-	table.Content
-	  .forge()
-	  .where('name', 'LIKE', '%' + name + '%')
-	  .query()
-	  .select()
-	  .limit(20)
-	  .then((model) => {
-	  	callback(model);
-	  });
+// Return content
+let getKeywordContent = (name) => {
+	return table.knex('content')
+		.where('name', 'LIKE', '%' + name + '%')
+		.limit(10);
 }
 
 	// Update total views of show based on content_id
@@ -49,14 +41,21 @@ let updateBytes = (content_id, bytes, callback) => {
 	incrementTotal(table.Seasons, content_id, 'total_bytes', bytes, callback);
 }
 
-let incrementTotal = (table, content_id, column, num, callback) => {
-	table
+let incrementTotal = (tableName, content_id, column, num, callback) => {
+	tableName
 	  .query()
 	  .where('content_id', '=', content_id)
 	  .increment(column, num)
 	  .then(() => {
-		  callback();
-	  });
+	  	callback();
+	  })
+	   
+	// table.knex(tableName)
+	// 	.where('content_id', '=', content_id)
+	// 	.increment(column, num)
+	// 	.then(() => {
+	// 		callback();
+	// 	})
 }
 
 

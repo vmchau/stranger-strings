@@ -35,5 +35,6 @@ module.exports.Content = Content;
 module.exports.Movies = Movies;
 module.exports.Seasons = Seasons;
 module.exports.Shows = Shows;
+
 module.exports.knex = knex;
 
