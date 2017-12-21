@@ -97,10 +97,12 @@ exports.seed = function(knex, Promise) {
       let seasonsBatch = [];
       console.log('Inserting 200k seasons entries');
       for (var i = 2800000; i < 3000000; i++) {
-        var obj = generateShowVars();
+        // var obj = generateShowVars();
+        var obj = {};
         obj.season_number = RNG(1, 11);
-        obj.content_id = RNG(2800000, 3000000);
+        obj.is_original = isOriginal();
         obj.box_shot = 'imgur.com/' + generateBoxShot();
+        obj.content_id = RNG(2800000, 3000000);
         seasonsBatch.push(obj);
       }
 
@@ -115,10 +117,7 @@ exports.seed = function(knex, Promise) {
       let showsBatch = [];
       console.log('Inserting 2 mil show entries');
       for (var i = 0; i < 2000000; i++) {
-        let obj = {};
-        obj.run_time = RNG(30, 120);
-        obj.name = movies[RNG(0, 10000000)];
-        obj.seasons_id = RNG(1, 200001);
+        let obj = generateEpisode();
         showsBatch.push(obj);
       }
       return knex.transaction(function(tr) {
@@ -130,10 +129,7 @@ exports.seed = function(knex, Promise) {
       let showsBatch = [];
       console.log('Inserting 4 mil show entries');
       for (var i = 2000000; i < 4000000; i++) {
-        let obj = {};
-        obj.run_time = RNG(30, 120);
-        obj.name = movies[RNG(0, 10000000)];
-        obj.seasons_id = RNG(1, 200001);
+        let obj = generateEpisode();
         showsBatch.push(obj);
       }
       return knex.transaction(function(tr) {
@@ -157,13 +153,22 @@ const generateRandomContentVars = () => {
   return obj;
 }
 
+const generateEpisode = () => {
+  var obj = {};
+  obj.name = movies[RNG(0, 10000000)];
+  obj.run_time = RNG(30, 120);
+  obj.total_bytes = RNG(100, 1000);
+  obj.total_views = RNG(100, 30000);
+  obj.seasons_id = RNG(1, 200001);
+  return obj;
+}
+
 const generateShowVars = () => {
   var obj = {};
   obj.run_time = RNG(20, 130);
   obj.total_bytes = RNG(100, 1000);
   obj.is_original = isOriginal();
   obj.total_views = RNG(100, 30000);
-
   return obj;
 }
 
