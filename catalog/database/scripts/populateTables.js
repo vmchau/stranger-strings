@@ -6,16 +6,28 @@ const moviesTwo = require('../data/content_titlesTwo.json');
 const moviesThree = require('../data/movie_titlesThree.json');
 
 const movies = [];
-for (var i = 0; i < moviesOne.length; i++) {
-  for (var j = 0; j < moviesTwo.length; j++) {
-    for (var k = 0; k < moviesThree.length; k++) {
-      movies.push(moviesOne[i].name.toLowerCase() + 
-                  moviesTwo[j].name.toLowerCase() + 
-                  moviesThree[k].name.toLowerCase());
-    }
-  }
-}
+//length of moviesOne
+//length of moviesTwo
+//length of moviesThree
 
+//function that takes a max and min and generates an integer between that num
+//function that takes the three random num, does a lookup and concats
+
+
+
+const numGen = (max, min) => (
+  Math.floor(Math.random() * (max - min) + min)
+)
+
+const movieGen = () => {
+    let num1 = numGen(0, 1000);
+    let num2 = numGen(0, 1000); 
+    let num3 = numGen(0, 10); 
+
+    return moviesOne[num1].name.toLowerCase() + 
+               moviesTwo[num2].name.toLowerCase() + 
+               moviesThree[num3].name.toLowerCase(); 
+}
 
 exports.seed = function(knex, Promise) {
 
@@ -35,7 +47,7 @@ exports.seed = function(knex, Promise) {
       console.log('Inserting 1.5 mil content entries');
       for (var i = 0; i < 1500000; i++) {
         var obj = generateRandomContentVars();
-        obj.name = movies[i];
+        obj.name = movieGen();
         batch.push(obj);
       }
       return knex.transaction(function(tr) {
@@ -48,7 +60,7 @@ exports.seed = function(knex, Promise) {
       console.log('Inserting 3 mil content entries');
       for (var i = 1500000; i < 3000000; i++) {
         var obj = generateRandomContentVars();
-        obj.name = movies[i];
+        obj.name = movieGen();
         batch.push(obj);
       }
       return knex.transaction(function(tr) {
@@ -63,7 +75,7 @@ exports.seed = function(knex, Promise) {
       console.log('Inserting 1.4 mil movie entries');
       for (var i = 0; i < 1400000; i++) {
         var obj = generateShowVars();
-        obj.name = movies[i];
+        obj.name = movieGen();
         obj.content_id = i + 1;
         obj.box_shot = 'imgur.com/' + generateBoxShot();
         moviesBatch.push(obj);
@@ -79,7 +91,7 @@ exports.seed = function(knex, Promise) {
       console.log('Inserting 2.5 movie entries');
       for (var i = 1400000; i < 2800000; i++) {
         var obj = generateShowVars();
-        obj.name = movies[i];
+        obj.name = movieGen();
         obj.content_id = i + 1;
         obj.box_shot = 'imgur.com/' + generateBoxShot();
         moviesBatch.push(obj);
@@ -155,7 +167,8 @@ const generateRandomContentVars = () => {
 
 const generateEpisode = () => {
   var obj = {};
-  obj.name = movies[RNG(0, 10000000)];
+  // obj.name = movies[RNG(0, 10000000)];
+  obj.name = movieGen();
   obj.run_time = RNG(30, 120);
   obj.total_bytes = RNG(100, 1000);
   obj.total_views = RNG(100, 30000);
